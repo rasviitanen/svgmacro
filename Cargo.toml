@@ -1,0 +1,6 @@
+[package]
+name = "svgmacro"
+version = "0.1.0"
+authors = ["rasviitanen <rasviitanen@gmail.com>"]
+
+[dependencies]
