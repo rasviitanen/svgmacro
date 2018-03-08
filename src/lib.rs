@@ -24,7 +24,7 @@ macro_rules! svg {
         svg!($w, $($rest)*);
     }};
 
-    ($w:expr, $e:tt) => (write!($w, "{}", stringify!($e))
+    ($w:expr, $e:tt) => (write!($w, "{}", $e)
             .expect("Error occurred while trying to write in String"));
 
     ($w:expr, $tag:ident ($( $attr:tt )*) [ $($inner:tt)* ] $($rest:tt)*) => {
@@ -111,7 +111,7 @@ mod tests {
         let mut out = String::new();
         svg!(&mut out,
             svg() [
-                g() [Hello]            
+                g() ["Hello"]            
             ]
         );
         assert_eq!(out, "<svg><g>Hello</g></svg>");
@@ -159,6 +159,25 @@ mod tests {
         assert_eq!(out, "<svg width=\"200\"><circle width=\"200\"/></svg>");
     }
 
+    #[test]
+    fn save_svg() {
+        fn content() -> String {
+            use std::fmt::Write;
+            let mut out = String::new();
+            svg!(&mut out,
+                svg() [
+                    g() ["Hello"]            
+                ]
+            );
+            out
+        }
+        use std::fs::File;
+        use std::io::Write;
+        let data = "Some data!";
+        let mut f = File::create("test.svg").expect("Unable to create file");
+        f.write_all(content().as_bytes()).expect("Unable to write data");
+        assert_eq!(content(), "<svg><g>Hello</g></svg>");
+    }
     #[test]    
     fn test_str_as_variable() {
         let my_str: &str = "200";
@@ -171,5 +190,6 @@ mod tests {
         );
         assert_eq!(out, "<svg width=\"200\"><circle width=\"200\"/></svg>");
     }
+
 
 }
