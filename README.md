@@ -1,5 +1,5 @@
 # svgmacro
-A RUST SVG library for writing SVGs.
+A Rust library for writing SVGs, using zero dependencies and does not require a nightly buid.
 
 Snippet
 ```
