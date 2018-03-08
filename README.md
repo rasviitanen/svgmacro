@@ -3,7 +3,7 @@ A RUST SVG library for writing SVGs.
 
 Snippet
 ```
-pub fn test_build() -> String {
+pub fn my_svg() -> String {
     use std::fmt::Write;
     let mut out = String::new();
     let height = 1080;
