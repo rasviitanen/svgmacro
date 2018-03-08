@@ -1,8 +1,9 @@
 # svgmacro
-A Rust library for writing SVGs, using zero dependencies and does not require a nightly build.
+A Rust library for writing SVGs, using zero dependencies and does not require a nightly build. Can write any valid XML-element.
+The result may be written to any file-like object.
 
-Handles variables and function calls by wrapping them in a {} closure. Writes to a file-like object ("&mut out" in the snippet).
-Can write any valid XML-element.
+Handle variables and function calls by wrapping them in a {} closure.
+
 
 Snippet
 ```
