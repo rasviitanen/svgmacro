@@ -4,6 +4,8 @@ The result may be written to any file-like object.
 
 Handle variables and function calls by wrapping them in a {} closure, expressions with a @-symbol.
 
+Released at:
+https://crates.io/crates/svgmacro
 
 Example:
 ```
