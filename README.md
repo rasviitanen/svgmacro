@@ -59,4 +59,5 @@ svg!(&mut out,
 );
 ```
 Click for animation:
+<br>
 <img src="./foo.svg">
