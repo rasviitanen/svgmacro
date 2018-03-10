@@ -19,7 +19,7 @@ extern crate svgmacro;
 ```
 
 
-# Examples
+## Examples
 Simple svg, showing variables, functioncalls and a for loop.
 ```
 use std::fmt::Write;
