@@ -35,18 +35,8 @@ Result written to out:
     <circle cx="50" cy="50" r="30"/>
 </svg>
 ```
-### Basic idea
-Define elements by their XML-tag, their attributes in a () and their contents in a [].
-
-```
-svg () []
-svg (width="200" height="100") ["Hello world!"]
-
-g () []
-g (size="20") ["Hello world!"]
-```
 ### Elements, parantheses and brackets
-Define elements by their XML-tag, their attributes in a () and their contents in a [].
+Define elements by their XML-tag, their attributes in a () and their children in a [].
 Parentheses and brackets are optional, these are all valid syntax.
 ```
 svg () []
@@ -63,10 +53,12 @@ Nest elements by putting new elements inside the []-brackets of their parent.
 Add multiple arguments by delmimiting them with a " ".
 
 ```
-svg [
-    g(size="12" color="red") ["This is a group"]
-    g(color="red") ["This is a group"]
-]
+svg!(&mut out,
+    svg [
+        g(size="12" color="red") ["This is a group"]
+        g(color="red") ["This is a group"]
+    ]
+);
 ```
 ### Communication with Rust expressions, functions and variables
 Handle variables and function calls by wrapping them in a {} closure, expressions with a @-symbol.
