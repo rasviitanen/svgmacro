@@ -4,19 +4,19 @@ The result may be written to any file-like object.
 
 Handle variables and function calls by wrapping them in a {} closure, expressions with a @-symbol.
 
+Read more at https://crates.io/crates/svgmacro
+
 Add the following to your Cargo.toml
 ```
 svgmacro = "0.1.2"
 ```
 
-To import the module:
+To use the crate in your module, simply add:
 ```
 #[macro_use]
 extern crate svgmacro;
 ```
 
-Released at:
-https://crates.io/crates/svgmacro
 
 Example:
 ```
