@@ -11,7 +11,7 @@ svg!(&mut out,
     svg (xmlns="http://www.w3.org/2000/svg" width={get_width()} height={height} viewBox="0 0 20 20") [
         g [
             {create_circle_group()}
-            @ for i in 0..2 {
+            @ for i in 0..3 {
                 svg!(&mut out, circle(cx="10" cy="10" r="10"));
             };                
         ]
@@ -26,7 +26,8 @@ Which returns
             <circle cx="100" cy="100" r="100"/>
         </g>
         <circle cx="10" cy="10" r="10"/>
-        <circle(cx="10" cy="10" r="10")/>
+        <circle cx="10" cy="10" r="10"/>
+        <circle cx="10" cy="10" r="10"/>
     </g>
 </svg>
 ```
