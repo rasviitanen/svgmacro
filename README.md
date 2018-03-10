@@ -20,20 +20,19 @@ extern crate svgmacro;
 ## Examples
 To use the macro, define a filelike object to store the result, and call the svg! macro.
 ```
-// The write function to use, must be called Write (use lib::someWrite as Write;)
-use std::fmt::Write;
-// The object to write to
-let mut out = String::new()
+use std::fmt::Write; // The write function to use, must be called Write (use lib::someWrite as Write;)
+let mut out = String::new(); // The object to write to
+
 svg!(&mut out,
-    svg (width="200" height="100") [
-        "Hello world!"
+    svg (width="100" height="100") [
+        circle (cx="50" cy="50" r="30")
     ]
 );
 ```
-Returns
+Result written to out:
 ```
-<svg width="200" heigh="100">
-    
+<svg width="100" heigh="100">
+    <circle cx="50" cy="50" r="30"/>
 </svg>
 ```
 
