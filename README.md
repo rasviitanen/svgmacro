@@ -53,7 +53,7 @@ svg!(&mut out,
                     animate(attributeName="y" attributeType="XML" values="10; 5; 10" begin="0s" dur="0.6s" repeatCount="indefinite")                        
                     animate(attributeName="opacity" attributeType="XML" values="0.2; 1; .2" begin="0s" dur="0.6s" repeatCount="indefinite")
                     animate(attributeName="height" attributeType="XML" values="10; 20; 10" begin="0s" dur="0.6s" repeatCount="indefinite")
-            ]);
+                ]);
         };
     ]
 );
