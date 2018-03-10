@@ -50,7 +50,7 @@ circle (cx="10" cy="10" r="10")
 ```
 ### Nested elements and multiple attributes
 Nest elements by putting new elements inside the []-brackets of their parent.
-Add multiple arguments by delmimiting them with a " ".
+Add multiple attributes by delmimiting them with a space.
 
 ```
 svg!(&mut out,
@@ -60,7 +60,7 @@ svg!(&mut out,
     ]
 );
 ```
-### Communication with Rust expressions, functions and variables
+### Rust expressions, functions and variables in SVG
 Handle variables and function calls by wrapping them in a {} closure, expressions with a @-symbol.
 ```
 use std::fmt::Write;
@@ -80,7 +80,8 @@ svg!(&mut out,
         ]
         g [
             @ for i in 0..3 {
-                svg!(&mut out, circle(cx="10" cy="10" r="10"));
+                let radius = 15;
+                svg!(&mut out, circle(cx="10" cy="10" r={radius}));
             }; 
         ]
     ]
