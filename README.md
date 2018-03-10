@@ -27,3 +27,20 @@ Which returns
     </g>
 </svg>
 ```
+Handle expreessions by assigning a @ and terminationg with a ;.
+For example.
+
+```
+svg!(&mut out,
+    svg [
+        @ for i in 1..2 {
+            let width = "100";
+            svg!(&mut out, circle(width={width}));
+        };
+
+        @ if 1 > 0 {
+            svg!(&mut out, rect(width="200"));            
+        };
+    ]
+);
+```
