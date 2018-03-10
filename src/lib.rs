@@ -14,19 +14,23 @@ macro_rules! parse_args {
     }};
 }
 
-
 macro_rules! svg {
     ($w:expr, ) => (());
 
+    ($w:expr, @ $inner:expr; $($rest:tt)*) => {{
+        $inner;
+        svg!($w, $($rest)*);
+    }};    
+    
     ($w:expr, {$e:expr} $($rest:tt)*) => {{
         write!($w, "{}", $e)
             .expect("Error occurred while trying to write in String");
         svg!($w, $($rest)*);
-    }};
+    }};    
 
     ($w:expr, $e:tt) => (write!($w, "{}", $e)
             .expect("Error occurred while trying to write in String"));
-
+    
     ($w:expr, $tag:ident ($( $attr:tt )*) [ $($inner:tt)* ] $($rest:tt)*) => {
         {
             write!($w, "<{}", stringify!($tag))
@@ -40,7 +44,7 @@ macro_rules! svg {
             svg!($w, $($rest)*);
         }
     };
-
+    
     ($w:expr, $tag:ident [ $($inner:tt)* ] $($rest:tt)*) => {
         {
             write!($w, "<{}>", stringify!($tag))
@@ -62,6 +66,7 @@ macro_rules! svg {
             svg!($w, $($rest)*);
         }
     };
+    
 }
 
 
@@ -154,9 +159,10 @@ mod tests {
         svg!(&mut out,
             svg(width={my_width()}) [
                 circle(width={my_width()})
+                {my_width()}
             ]
         );
-        assert_eq!(out, "<svg width=\"200\"><circle width=\"200\"/></svg>");
+        assert_eq!(out, "<svg width=\"200\"><circle width=\"200\"/>200</svg>");
     }
 
     #[test]
@@ -190,6 +196,24 @@ mod tests {
         );
         assert_eq!(out, "<svg width=\"200\"><circle width=\"200\"/></svg>");
     }
+    
+    #[test]    
+    fn test_loop() {
+        use std::fmt::Write;
+        let mut out = String::new();
+        svg!(&mut out,
+            svg [
+                @ for i in 1..2 {
+                    let width = "100";
+                    svg!(&mut out, circle(width={width}));
+                };
 
+                @ if 1 > 0 {
+                    svg!(&mut out, rect(width="200"));            
+                };
+            ]
+        );
+        assert_eq!(out, "<svg><circle width=\"100\"/><rect width=\"200\"/></svg>");
+    }
 
 }
