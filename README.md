@@ -50,9 +50,9 @@ svg!(&mut out,
         @ for i in 0..5 {
             svg!(&mut out,
                 rect(x={i*10} y="10" width="4" height="10" fill="#333" opacity="0.2") [
-                animate(attributeName="y" attributeType="XML" values="10; 5; 10" begin="0s" dur="0.6s" repeatCount="indefinite")                        
-                animate(attributeName="opacity" attributeType="XML" values="0.2; 1; .2" begin="0s" dur="0.6s" repeatCount="indefinite")
-                animate(attributeName="height" attributeType="XML" values="10; 20; 10" begin="0s" dur="0.6s" repeatCount="indefinite")
+                    animate(attributeName="y" attributeType="XML" values="10; 5; 10" begin="0s" dur="0.6s" repeatCount="indefinite")                        
+                    animate(attributeName="opacity" attributeType="XML" values="0.2; 1; .2" begin="0s" dur="0.6s" repeatCount="indefinite")
+                    animate(attributeName="height" attributeType="XML" values="10; 20; 10" begin="0s" dur="0.6s" repeatCount="indefinite")
             ]);
         };
     ]
