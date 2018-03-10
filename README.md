@@ -10,8 +10,10 @@ Snippet
 svg!(&mut out,
     svg (xmlns="http://www.w3.org/2000/svg" width={get_width()} height={height} viewBox="0 0 20 20") [
         g [
-            {create_circle_group()}               
-            circle(cx="10" cy="10" r="10")                
+            {create_circle_group()}
+            @ for i in 0..2 {
+                svg!(&mut out, circle(cx="10" cy="10" r="10"));
+            };                
         ]
     ]
 );
@@ -24,23 +26,7 @@ Which returns
             <circle cx="100" cy="100" r="100"/>
         </g>
         <circle cx="10" cy="10" r="10"/>
+        <circle(cx="10" cy="10" r="10")/>
     </g>
 </svg>
-```
-Interpret expressions with a @-symbol.
-For example.
-
-```
-svg!(&mut out,
-    svg (xmlns="http://www.w3.org/2000/svg" width={get_width()} height={height} viewBox="0 0 20 20") [
-        @ for i in 1..2 {
-            let width = "100";
-            svg!(&mut out, circle(width={width}));
-        };
-
-        @ if 1 > 0 {
-            svg!(&mut out, rect(width="200"));            
-        };
-    ]
-);
 ```
