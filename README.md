@@ -7,8 +7,6 @@ The result may be written to any file-like object.
 
 Handle variables and function calls by wrapping them in a {} closure, expressions with a @-symbol.
 
-Read more at https://crates.io/crates/svgmacro
-
 Add the following to your Cargo.toml
 ```
 svgmacro = "0.1.2"
@@ -21,7 +19,8 @@ extern crate svgmacro;
 ```
 
 
-Example:
+# Examples
+Simple svg, showing variables, functioncalls and a for loop.
 ```
 use std::fmt::Write;
 let mut out = String::new()
