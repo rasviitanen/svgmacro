@@ -35,7 +35,7 @@ Result written to out:
     <circle cx="50" cy="50" r="30"/>
 </svg>
 ```
-
+### Basic idea
 Define elements by their XML-tag, their attributes in a () and their contents in a [].
 
 ```
