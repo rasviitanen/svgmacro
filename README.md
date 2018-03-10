@@ -1,6 +1,6 @@
 # svgmacro
 [![Cargo](https://img.shields.io/crates/v/svgmacro.svg)](https://crates.io/crates/svgmacro) 
-[![Documentation](https://docs.rs/svgmacro/svgmacro.svg)](https://docs.rs/svgmacro/)
+[![Documentation](https://docs.rs/svgmacro/svgmacro.svg)](https://docs.rs/svgmacro/badge.svg)
 <br>
 A Rust library for writing SVGs using zero dependencies and does not require a nightly build. Can write any valid XML-element.
 The result may be written to any file-like object.
