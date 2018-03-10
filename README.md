@@ -58,4 +58,4 @@ svg!(&mut out,
     ]
 );
 ```
-<img src="./foo.svg">
+<iframe src="./foo.svg"/>
