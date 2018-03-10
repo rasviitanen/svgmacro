@@ -27,7 +27,7 @@ Which returns
     </g>
 </svg>
 ```
-Handle expreessions by assigning a @ and terminationg with a ;.
+Interpret expressions with a @-symbol.
 For example.
 
 ```
