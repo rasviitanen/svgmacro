@@ -8,7 +8,7 @@ Function calls and variables are available.
 
 Add the following to your Cargo.toml
 ```
-svgmacro = "0.1.3"
+svgmacro = "0.1.4"
 ```
 
 To use the crate in your module, simply add:
@@ -44,8 +44,8 @@ g []
 circle ()
 circle 
 
-svg (width="200" height="100") ["Hello world!"]
-g (size="20") ["Hello world!"]
+svg (width="200" height="100") []
+g (size="20") [circle (cx="10" cy="10" r="10")]
 circle (cx="10" cy="10" r="10")
 ```
 ### Nested elements and multiple attributes
@@ -55,8 +55,13 @@ Add multiple attributes by delmimiting them with a space.
 ```
 svg!(&mut out,
     svg [
-        g(size="12" color="red") ["This is a group"]
-        g(color="red") ["This is a group"]
+        g(size="12" color="red") [
+            circle(cx="10" cy="10" r="10")
+            circle(cx="20" cy="20" r="10")
+        ]
+        g(color="red") [
+            circle(cx="20" cy="20" r="10")
+        ]
     ]
 );
 ```
