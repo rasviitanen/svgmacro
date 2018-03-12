@@ -50,6 +50,18 @@ macro_rules! _parse_args {
                 .expect("Error occurred while trying to write in String");
             _parse_args!($w, $($rest)*);
     }};
+
+    ($w:expr, $name:ident-$subname:ident = $param:tt $($rest:tt)*) => {{
+            write!($w, " {}:{}={}", stringify!($name), stringify!($subname), stringify!($param))
+                .expect("Error occurred while trying to write in String");
+            _parse_args!($w, $($rest)*);
+    }};
+    
+    ($w:expr, $name:ident-$subname:ident = {$param:expr} $($rest:tt)*) => {{
+            write!($w, " {}:{}={}", stringify!($name), stringify!($subname), $param)
+                .expect("Error occurred while trying to write in String");
+            _parse_args!($w, $($rest)*);
+    }};
 }
 
 #[macro_export]
