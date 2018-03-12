@@ -8,7 +8,7 @@ Function calls and variables are available.
 
 Add the following to your Cargo.toml
 ```
-svgmacro = "0.1.5"
+svgmacro = "0.1.4"
 ```
 
 To use the crate in your module, simply add:
