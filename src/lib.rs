@@ -52,13 +52,13 @@ macro_rules! _parse_args {
     }};
 
     ($w:expr, $name:ident-$subname:ident = $param:tt $($rest:tt)*) => {{
-            write!($w, " {}:{}={}", stringify!($name), stringify!($subname), stringify!($param))
+            write!($w, " {}-{}={}", stringify!($name), stringify!($subname), stringify!($param))
                 .expect("Error occurred while trying to write in String");
             _parse_args!($w, $($rest)*);
     }};
     
     ($w:expr, $name:ident-$subname:ident = {$param:expr} $($rest:tt)*) => {{
-            write!($w, " {}:{}={}", stringify!($name), stringify!($subname), $param)
+            write!($w, " {}-{}={}", stringify!($name), stringify!($subname), $param)
                 .expect("Error occurred while trying to write in String");
             _parse_args!($w, $($rest)*);
     }};
@@ -227,6 +227,18 @@ mod tests {
             ]
         );
         assert_eq!(out, "<svg width=\"200\"><circle width=\"200\"/></svg>");
+    }
+
+    #[test]    
+    fn test_dash_attribs() {
+        use std::fmt::Write;
+        let mut out = String::new();
+        svg!(&mut out,
+            text (x="0" y="35" fill="red" font-family="Verdana" font-size="35")[
+                "Hello, out there"
+            ]
+        );
+        assert_eq!(out, "<text x=\"0\" y=\"35\" fill=\"red\" font-family=\"Verdana\" font-size=\"35\">Hello, out there</text>");
     }
 
 }
