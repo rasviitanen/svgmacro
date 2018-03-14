@@ -3,7 +3,7 @@
 [![Documentation](https://docs.rs/svgmacro/badge.svg)](https://docs.rs/svgmacro/)
 <br>
 A Rust library for writing SVGs. Can write any SVG-element.
-Function calls and variables are available.
+Function calls and variables defined in Rust can be used in the SVG without trouble.
 
 Add the following to your Cargo.toml
 ```
@@ -23,10 +23,10 @@ to be able to successfully write to it.
 use std::fmt::Write;
 let mut out = String::new();
 ```
-Below is a quick example on how to use the macro.
+Below is a quick example on how to use the macro. SVG elements and attributes are defined by their regular names found in the SVG reference.
 ```
-use std::fmt::Write; // The write function to use, must be called Write (use lib::someWrite as Write;)
-let mut out = String::new(); // The object to write to
+use std::fmt::Write;
+let mut out = String::new();
 
 SVG!(&mut out,
     svg (width="100" height="100") [
@@ -41,13 +41,9 @@ Result written to out:
 </svg>
 ```
 ### Elements, parantheses and brackets
-Define elements by their XML-tag, their attributes in a () and their children in a [].
-These are all valid syntax.
+Define elements in plain text by their element tag, their attributes in a parenthesis, (), and their children in a bracket, [].
+These are all valid syntax (Note that you must not use both brackets and parantheses, however just "circle" is not viable).
 ```
-g []
-circle ()
-svg () []
-
 g (fill="red") [circle (cx="10" cy="10" r="10")]
 g () [circle (cx="10" cy="10" r="10")]
 g (fill="red") []
@@ -90,6 +86,7 @@ SVG!(&mut out,
         g [
             @ for i in 1..3 {
                 let radius = 15*i;
+                // It is important to call the macro again, when using it from inside and expression.
                 SVG!(&mut out, circle(cx={10*i} cy="10" r={radius}));
             }; 
         ]
