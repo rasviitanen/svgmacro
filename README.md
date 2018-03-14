@@ -18,12 +18,18 @@ extern crate svgmacro;
 ```
 
 ## Examples
-To use the macro, define a filelike object to store the result, and call the svg! macro.
+To use the macro, create a new String to store the result, and use std::fmt:Write
+as your writing function.
+```
+use std::fmt::Write;
+let mut out = String::new();
+```
+Below is a quick example on how to use the macro.
 ```
 use std::fmt::Write; // The write function to use, must be called Write (use lib::someWrite as Write;)
 let mut out = String::new(); // The object to write to
 
-svg!(&mut out,
+SVG!(&mut out,
     svg (width="100" height="100") [
         circle (cx="50" cy="50" r="30")
     ]
@@ -39,13 +45,14 @@ Result written to out:
 Define elements by their XML-tag, their attributes in a () and their children in a [].
 Parentheses and brackets are optional, these are all valid syntax.
 ```
-svg () []
 g []
 circle ()
-circle 
+svg () []
 
 svg (width="200" height="100") []
-g (size="20") [circle (cx="10" cy="10" r="10")]
+g (fill="red") [circle (cx="10" cy="10" r="10")]
+g () [circle (cx="10" cy="10" r="10")]
+g (fill="red") []
 circle (cx="10" cy="10" r="10")
 ```
 ### Nested elements and multiple attributes
@@ -53,7 +60,7 @@ Nest elements by putting new elements inside the []-brackets of their parent.
 Add multiple attributes by delmimiting them with a space.
 
 ```
-svg!(&mut out,
+SVG!(&mut out,
     svg [
         g(size="12" color="red") [
             circle(cx="10" cy="10" r="10")
@@ -66,7 +73,8 @@ svg!(&mut out,
 );
 ```
 ### Rust expressions, functions and variables in SVG
-Handle variables and function calls by wrapping them in a {} closure, expressions with a @-symbol.
+Handle variables and returning function calls by wrapping them in a {} closure, 
+expressions such as void functions, for loops and if expressions (any Rust code is ok) with a @-symbol and terminate with a ";".
 ```
 use std::fmt::Write;
 let mut out = String::new()
@@ -75,18 +83,15 @@ let mut out = String::new()
 let width = "200";
 let height = "100";
 
-svg!(&mut out,
-    svg [
-        g(width={width} height={height}) [
-            "This is a group"
+SVG!(&mut out,
+    svg (width={width} height={height}) [
+        g(fill={get_color()}) [
+            @ create_cool_shape(&mut out); 
         ]
         g [
-            {create_cool_shape(&mut out)}        
-        ]
-        g [
-            @ for i in 0..3 {
-                let radius = 15;
-                svg!(&mut out, circle(cx="10" cy="10" r={radius}));
+            @ for i in 1..3 {
+                let radius = 15*i;
+                SVG!(&mut out, circle(cx={10*i} cy="10" r={radius}));
             }; 
         ]
     ]

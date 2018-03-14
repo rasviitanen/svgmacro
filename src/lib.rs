@@ -1,8 +1,9 @@
 //!
 //! ## Introduction to svgmacro
-//! A macro for writing SVGs.
-//! Can write any valid XML-element. The result may be written to any file-like object.
-//! Handle variables and function calls by wrapping them in a {} closure, expressions begin with a @-symbol.
+//! A macro for writing SVGs from Rust.
+//! Can write any valid XML-element.
+//! Handle variables and returning functions by wrapping them in a {} closure.
+//! Expressions begin with a @-symbol, such as if statements, for-loops or void-functions.
 //! ## Examples
 //!
 //! ```
@@ -10,13 +11,18 @@
 //! let mut out = String::new();
 //!
 //! let width = 320;
-//! svg!(&mut out,
+//! SVG!(&mut out,
 //!    svg (xmlns="http://www.w3.org/2000/svg" width={width} height="200") [
 //!        g [
-//!            g (id="paragraph" size="12")["This is the content of a group"]
+//!            g (id="paragraph_1" fill="white")[text["This is an example"]]
+//!            
 //!            circle(cx="10" cy="10" r="10")
+//!
 //!            @ for i in 0..3 {
-//!                svg!(&mut out, circle(cx="10" cy="10" r="10"));
+//!                 // Need to return to the SVG! macro
+//!                 SVG!(&mut out, 
+//!                     circle(cx="10" cy="10" r="10")
+//!                 );
 //!            };                
 //!        ]
 //!     ]    
@@ -65,18 +71,18 @@ macro_rules! _parse_args {
 }
 
 #[macro_export]
-macro_rules! svg {
+macro_rules! SVG {
     ($w:expr, ) => (());
 
     ($w:expr, @ $inner:expr; $($rest:tt)*) => {{
         $inner;
-        svg!($w, $($rest)*);
+        SVG!($w, $($rest)*);
     }};    
     
     ($w:expr, {$e:expr} $($rest:tt)*) => {{
         write!($w, "{}", $e)
             .expect("Error occurred while trying to write in String");
-        svg!($w, $($rest)*);
+        SVG!($w, $($rest)*);
     }};    
 
     ($w:expr, $e:tt) => (write!($w, "{}", $e)
@@ -89,10 +95,10 @@ macro_rules! svg {
             _parse_args!($w, $($attr)*);
             write!($w, ">")
                 .expect("Error occurred while trying to write in String");
-            svg!($w, $($inner)*);
+            SVG!($w, $($inner)*);
             write!($w, "</{}>", stringify!($tag))
                 .expect("Error occurred while trying to write in String");
-            svg!($w, $($rest)*);
+            SVG!($w, $($rest)*);
         }
     };
     
@@ -100,10 +106,10 @@ macro_rules! svg {
         {
             write!($w, "<{}>", stringify!($tag))
                 .expect("Error occurred while trying to write in String");
-            svg!($w, $($inner)*);
+            SVG!($w, $($inner)*);
             write!($w, "</{}>", stringify!($tag))
                 .expect("Error occurred while trying to write in String");
-            svg!($w, $($rest)*);
+            SVG!($w, $($rest)*);
         }
     };
 
@@ -114,7 +120,7 @@ macro_rules! svg {
             _parse_args!($w, $($attr)*);
             write!($w, "/>")
                 .expect("Error occurred while trying to write in String");
-            svg!($w, $($rest)*);
+            SVG!($w, $($rest)*);
         }
     };
     
@@ -123,22 +129,68 @@ macro_rules! svg {
 
 #[cfg(test)]
 mod tests {
+    fn attribute_fn() -> String {
+        use std::fmt::Write;
+        let mut out = String::new();
+        write!(out, "200").unwrap();
+        out
+    }
+
+    fn content_fn() -> String {
+        use std::fmt::Write;
+        let mut out = String::new();
+        write!(out, "Hello, this is an example").unwrap();
+        out
+    }
+
+    fn my_function(out: &mut String) {
+        use std::fmt::Write;
+        SVG!(out,
+            circle (cx="100" cy="100" r="10")        
+        );
+    }
+
+    #[test]    
+    fn test_special_fn() {
+        use std::fmt::Write;
+        let mut out = String::new();
+        SVG!(&mut out,
+            svg (width={attribute_fn()}) [
+                {content_fn()} 
+                circle(fill="red")
+                {content_fn()} 
+                @ my_function(&mut out);
+                {content_fn()}        
+            ]
+        );
+        assert_eq!(out, "<svg width=\"200\">Hello, this is an example<circle fill=\"red\"/>Hello, this is an example<circle cx=\"100\" cy=\"100\" r=\"10\"/>Hello, this is an example</svg>");
+    }
     
     #[test]    
     fn test_flat() {
         use std::fmt::Write;
         let mut out = String::new();
-        svg!(&mut out,
+        SVG!(&mut out,
             svg () []
         );
         assert_eq!(out, "<svg></svg>");
     }
 
     #[test]    
+    fn test_regular_svg() {
+        use std::fmt::Write;
+        let mut out = String::new();
+        SVG!(&mut out,
+            "<svg><circle row=\"100\"></circle></svg>"
+        );
+        assert_eq!(out, "<svg><circle row=\"100\"></circle></svg>");
+    }
+
+    #[test]    
     fn test_deep() {
         use std::fmt::Write;
         let mut out = String::new();
-        svg!(&mut out,
+        SVG!(&mut out,
             svg() [
                 g() [
                     g () [
@@ -153,7 +205,7 @@ mod tests {
     fn test_attributes() {
         use std::fmt::Write;
         let mut out = String::new();
-        svg!(&mut out,
+        SVG!(&mut out,
             svg (width="200" height="200") [
                 g() []            
             ]
@@ -165,7 +217,7 @@ mod tests {
     fn test_content() {
         use std::fmt::Write;
         let mut out = String::new();
-        svg!(&mut out,
+        SVG!(&mut out,
             svg() [
                 g() ["Hello"]            
             ]
@@ -177,7 +229,7 @@ mod tests {
     fn test_absence() {
         use std::fmt::Write;
         let mut out = String::new();
-        svg!(&mut out,
+        SVG!(&mut out,
             svg [
                 circle()
                 g[]
@@ -191,7 +243,7 @@ mod tests {
         use std::fmt::Write;
         let mut out = String::new();
         let width = 200;
-        svg!(&mut out,
+        SVG!(&mut out,
             svg(width={width}) [
                 circle(width={width})
             ]
@@ -207,7 +259,7 @@ mod tests {
         }
         use std::fmt::Write;
         let mut out = String::new();
-        svg!(&mut out,
+        SVG!(&mut out,
             svg(width={my_width()}) [
                 circle(width={my_width()})
                 {my_width()}
@@ -221,7 +273,7 @@ mod tests {
         let my_str: &str = "200";
         use std::fmt::Write;
         let mut out = String::new();
-        svg!(&mut out,
+        SVG!(&mut out,
             svg(width={my_str}) [
                 circle(width={my_str})
             ]
@@ -233,12 +285,24 @@ mod tests {
     fn test_dash_attribs() {
         use std::fmt::Write;
         let mut out = String::new();
-        svg!(&mut out,
+        SVG!(&mut out,
             text (x="0" y="35" fill="red" font-family="Verdana" font-size="35")[
                 "Hello, out there"
             ]
         );
         assert_eq!(out, "<text x=\"0\" y=\"35\" fill=\"red\" font-family=\"Verdana\" font-size=\"35\">Hello, out there</text>");
+    }
+
+    #[test]    
+    fn test_expression() {
+        use std::fmt::Write;
+        let mut out = String::new();
+        SVG!(&mut out,
+            @ for _i in 0..2 {
+                SVG!(&mut out, circle(dy="20"));            
+            };
+        );
+        assert_eq!(out, "<circle dy=\"20\"/><circle dy=\"20\"/>");
     }
 
 }
