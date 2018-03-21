@@ -39,6 +39,24 @@ macro_rules! _parse_args {
             _parse_args!($w, $($rest)*);
     }};
 
+    ($w:expr, {$name:ident} = $param:tt $($rest:tt)*) => {{
+            write!($w, " {}={}", $name, stringify!($param))
+                .expect("Error occurred while trying to write in String");
+            _parse_args!($w, $($rest)*);
+    }};
+
+    ($w:expr, {$name:ident} = {$param:expr} $($rest:tt)*) => {{
+            write!($w, " {}=\"{}\"", $name, $param)
+                .expect("Error occurred while trying to write in String");
+            _parse_args!($w, $($rest)*);
+    }};
+
+    ($w:expr, {$attribute:expr} $($rest:tt)*) => {{
+            write!($w, " {}", $attribute)
+                .expect("Error occurred while trying to write in String");
+            _parse_args!($w, $($rest)*);
+    }};
+
     ($w:expr, $name:ident = $param:tt $($rest:tt)*) => {{
             write!($w, " {}={}", stringify!($name), stringify!($param))
                 .expect("Error occurred while trying to write in String");
@@ -77,7 +95,44 @@ macro_rules! SVG {
     ($w:expr, @ $inner:expr; $($rest:tt)*) => {{
         $inner;
         SVG!($w, $($rest)*);
-    }};    
+    }};   
+
+    ($w:expr, {$tag:expr} ($( $attr:tt )*) [ $($inner:tt)* ] $($rest:tt)*) => {
+        {
+            write!($w, "<{}", $tag)
+                .expect("Error occurred while trying to write in String");
+            _parse_args!($w, $($attr)*);
+            write!($w, ">")
+                .expect("Error occurred while trying to write in String");
+            SVG!($w, $($inner)*);
+            write!($w, "</{}>", stringify!($tag))
+                .expect("Error occurred while trying to write in String");
+            SVG!($w, $($rest)*);
+        }
+    };   
+
+    ($w:expr, {$tag:expr} ($( $attr:tt )*) $($rest:tt)*) => {
+        {
+            write!($w, "<{}", $tag)
+                .expect("Error occurred while trying to write in String");
+            _parse_args!($w, $($attr)*);
+            write!($w, "/>")
+                .expect("Error occurred while trying to write in String");
+            SVG!($w, $($rest)*);
+        }
+    };  
+
+    ($w:expr, {$tag:expr} [ $($inner:tt)* ] $($rest:tt)*) => {
+        {
+            write!($w, "<{}>", $tag)
+                .expect("Error occurred while trying to write in String");
+            _parse_args!($w, $($attr)*);
+            SVG!($w, $($inner)*);
+            write!($w, "</{}>", stringify!($tag))
+                .expect("Error occurred while trying to write in String");
+            SVG!($w, $($rest)*);
+        }
+    };
     
     ($w:expr, {$e:expr} $($rest:tt)*) => {{
         write!($w, "{}", $e)
@@ -303,6 +358,52 @@ mod tests {
             };
         );
         assert_eq!(out, "<circle dy=\"20\"/><circle dy=\"20\"/>");
+    }
+
+    #[test]    
+    fn test_variable_as_element() {
+        use std::fmt::Write;
+        let mut out = String::new();
+        let circle_element = "circle".to_string();
+        SVG!(&mut out,
+            {circle_element}()
+        );
+        assert_eq!(out, "<circle/>");
+    }
+
+    #[test]    
+    fn test_variable_as_element_with_attibutes() {
+        use std::fmt::Write;
+        let mut out = String::new();
+        let circle_element = "circle".to_string();
+        SVG!(&mut out,
+            {circle_element} (cx="20" cy="20")
+        );
+        assert_eq!(out, "<circle cx=\"20\" cy=\"20\"/>");
+    }
+
+    #[test]    
+    fn test_variable_as_attribute() {
+        use std::fmt::Write;
+        let mut out = String::new();
+        let circle_element = "circle".to_string();
+        let circle_cx = "cx=\"20\"".to_string();
+        SVG!(&mut out,
+            {circle_element} ({circle_cx} cy="20")
+        );
+        assert_eq!(out, "<circle cx=\"20\" cy=\"20\"/>");
+    }
+
+    #[test]    
+    fn test_variable_as_attribute_element() {
+        use std::fmt::Write;
+        let mut out = String::new();
+        let circle_element = "circle".to_string();
+        let cx = "cx".to_string();
+        SVG!(&mut out,
+            {circle_element} ({cx}="20")
+        );
+        assert_eq!(out, "<circle cx=\"20\"/>");
     }
 
 }

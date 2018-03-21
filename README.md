@@ -7,7 +7,7 @@ Function calls and variables defined in Rust can be used in the SVG without trou
 
 Add the following to your Cargo.toml
 ```
-svgmacro = "0.2.0"
+svgmacro = "0.2.1"
 ```
 
 To use the crate in your module, simply add:
@@ -42,7 +42,7 @@ Result written to out:
 ```
 ### Elements, parantheses and brackets
 Define elements in plain text by their element tag, their attributes in a parenthesis, (), and their children in a bracket, [].
-These are all valid syntax (Note that you must not use both brackets and parantheses, however just "circle" is not viable).
+These are all valid syntax (note that you do not have to use both brackets and parantheses).
 ```
 g (fill="red") [circle (cx="10" cy="10" r="10")]
 g () [circle (cx="10" cy="10" r="10")]
