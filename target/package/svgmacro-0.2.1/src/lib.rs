@@ -105,7 +105,7 @@ macro_rules! SVG {
             write!($w, ">")
                 .expect("Error occurred while trying to write in String");
             SVG!($w, $($inner)*);
-            write!($w, "</{}>", $tag)
+            write!($w, "</{}>", stringify!($tag))
                 .expect("Error occurred while trying to write in String");
             SVG!($w, $($rest)*);
         }
@@ -128,7 +128,7 @@ macro_rules! SVG {
                 .expect("Error occurred while trying to write in String");
             _parse_args!($w, $($attr)*);
             SVG!($w, $($inner)*);
-            write!($w, "</{}>", $tag)
+            write!($w, "</{}>", stringify!($tag))
                 .expect("Error occurred while trying to write in String");
             SVG!($w, $($rest)*);
         }

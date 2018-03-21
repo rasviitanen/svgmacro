@@ -7,7 +7,7 @@ Function calls and variables defined in Rust can be used in the SVG without trou
 
 Add the following to your Cargo.toml
 ```
-svgmacro = "0.2.2"
+svgmacro = "0.2.1"
 ```
 
 To use the crate in your module, simply add:
