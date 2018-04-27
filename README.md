@@ -5,6 +5,9 @@
 A Rust library for writing SVGs. Can write any SVG-element.
 Function calls and variables defined in Rust can be used in the SVG without trouble.
 
+Questions or requests can be emailed to
+rasviitanen@gmail.com.
+
 Add the following to your Cargo.toml
 ```
 svgmacro = "0.2.2"
@@ -18,7 +21,7 @@ extern crate svgmacro;
 
 ## Examples
 To use the macro, create a new String to store the result, and add "use std::fmt:Write"
-to be able to successfully write to it.
+to be able to successfully write to it. Other types are also supported.
 ```
 use std::fmt::Write;
 let mut out = String::new();
